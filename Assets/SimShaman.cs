@@ -34,6 +34,13 @@ public class SimShaman : MonoBehaviour {
     int flurryCount;
     int flurryMax = 3;
 
+    //Stats
+    int critStat;
+    int flurryStat;
+    int wfStat;
+    int attackStat;
+    int glanceStat;
+
     //EzSim
     private readonly float wf = 466 / 14; //466
     private readonly float attackFactor = 1.06f;
@@ -92,7 +99,13 @@ public class SimShaman : MonoBehaviour {
             flurryDpsFactor = -0.1151f * crit * crit - 0.4023f * crit + 0.9309f;
         }
         //print("FlurryDpsFactor: " + flurryDpsFactor);
-        float realDPS = dps + 0.2f*2*(dps+wf+crit*dps) + crit*dps + crit*flurryDpsFactor*dps + 0.2f*2*crit*flurryDpsFactor*dps + crit*crit*flurryDpsFactor*dps;
+
+        float flurryDPS = crit * flurryDpsFactor * dps + 0.2f * 2 * crit * flurryDpsFactor * dps + crit * crit * flurryDpsFactor * dps;
+        float glanceFactor = GC.isOrc.isOn ? 0.65f : 0.85f;
+        float glanceDPS = 0.4f*glanceFactor* dps;
+        float normalDPS = 0.6f*(dps + crit * dps);
+        float wfDPS = 0.2f * 2 * (dps + wf + crit * dps);
+        float realDPS = normalDPS + wfDPS + glanceDPS + flurryDPS;
         dpsText.text = "" + realDPS;
 
         Simulation sim = new Simulation(realDPS, attacks);
@@ -212,9 +225,15 @@ public class SimShaman : MonoBehaviour {
             }
         }
 
-        int factor = 1;
-        int random = Random.Range(1, 1000);
-        if (random <= crit * 10)
+        float factor = 1;
+        int randomGlance = Random.Range(1, 100);
+        int randomCrit = Random.Range(1, 1000);
+        if (randomGlance < 40)
+        {
+            factor = 0.65f;
+            if (GC.isOrc.isOn) factor = 0.85f;
+        }
+        else if (randomCrit <= crit * 10) //glancings cannot crit
         {
             if(GC.critToggle.isOn) factor = 2;
             if(GC.flurryToggle.isOn) flurry = true;

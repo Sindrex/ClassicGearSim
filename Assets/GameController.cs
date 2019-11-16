@@ -34,6 +34,7 @@ public class GameController : MonoBehaviour {
     Item[][] preRaidGear;
     Item[][] MCGear;
     Item[][] DMGear;
+    Item[][] WBGear;
     Item[][] BWLGear;
 
     List<List<Item>> bestCombos;
@@ -48,16 +49,18 @@ public class GameController : MonoBehaviour {
         preRaidInit();
         MCInit();
         DMInit();
+        WBInit();
         BWLInit();
 
         //currentGearSet = joinItemArray(preRaidGear, DMGear);
         List<String> phaseOptions = new List<string>();
         phaseOptions.Add("None");
-        phaseOptions.Add("PreRaid");
-        phaseOptions.Add("MC");
-        phaseOptions.Add("PreRaid + DM");
-        phaseOptions.Add("MC + DM");
-        phaseOptions.Add("BWL");
+        phaseOptions.Add("P1: PreRaid");
+        phaseOptions.Add("P1: MC");
+        phaseOptions.Add("P1.5: PreRaid + DM");
+        phaseOptions.Add("P1.5: MC + DM");
+        phaseOptions.Add("P2: MC + World Bosses");
+        phaseOptions.Add("P3: BWL");
         phase.ClearOptions();
         phase.AddOptions(phaseOptions);
 
@@ -245,9 +248,11 @@ public class GameController : MonoBehaviour {
             new Item[] {
             },
             new Item[] {
-                new Item("Wristguards of Stability", 3.4f, 0)
+                new Item("Wristguards of Stability", 3.4f, 0),
+                new Item("Wristguards of the True Flight", 0, 1, 1)
             },
             new Item[] {
+                new Item("Aged Core Leather Gloves", 2.1f, 1)
             },
             new Item[] {
             },
@@ -319,6 +324,46 @@ public class GameController : MonoBehaviour {
                 new Item("Treant's Bane", 63, 2, 0, 2.7f, true)
             },
             new Item[] { //wep2
+            }
+        };
+    }
+    void WBInit()
+    {
+        WBGear = new Item[][]{
+            new Item[] { //head
+            },
+            new Item[] { //neck
+            },
+            new Item[] { //shoulder
+            },
+            new Item[] { //back
+                new Item("Eskhandar's Pelt", 0, 1f),
+                new Item("Puissant Cape", 2.9f, 0 ,1)
+            },
+            new Item[] { //chest
+            },
+            new Item[] { //bracers
+            },
+            new Item[] { //hand
+                new Item("Doomhide Gauntlets", 3, 0.7f)
+            },
+            new Item[] { //waist
+            },
+            new Item[] { //legs
+            },
+            new Item[] { //feet
+            },
+            new Item[] {
+            },
+            new Item[] {
+            },
+            new Item[] { //hoj
+            },
+            new Item[] {
+            },
+            new Item[] {
+            },
+            new Item[] {
             }
         };
     }
@@ -677,7 +722,10 @@ public class GameController : MonoBehaviour {
                 currentGearSet = joinItemArray(joinItemArray(preRaidGear, DMGear), MCGear);
                 break;
             case 5:
-                currentGearSet = joinItemArray(joinItemArray(joinItemArray(preRaidGear, DMGear), MCGear), BWLGear);
+                currentGearSet = joinItemArray(joinItemArray(joinItemArray(preRaidGear, DMGear), MCGear), WBGear);
+                break;
+            case 6:
+                currentGearSet = joinItemArray(joinItemArray(joinItemArray(joinItemArray(preRaidGear, DMGear), MCGear), WBGear), BWLGear);
                 break;
             default:
                 break;
