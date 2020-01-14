@@ -35,7 +35,12 @@ public class GameController : MonoBehaviour {
     Item[][] MCGear;
     Item[][] DMGear;
     Item[][] WBGear;
+    Item[][] BGGear;
     Item[][] BWLGear;
+    Item[][] ZGGear;
+    Item[][] DragonGear;
+    Item[][] AQGear;
+    Item[][] NaxxGear;
 
     List<List<Item>> bestCombos;
     List<ItemSet> bestCombosItemSet;
@@ -51,6 +56,7 @@ public class GameController : MonoBehaviour {
         DMInit();
         WBInit();
         BWLInit();
+        ZGInit();
 
         //currentGearSet = joinItemArray(preRaidGear, DMGear);
         List<String> phaseOptions = new List<string>();
@@ -59,8 +65,9 @@ public class GameController : MonoBehaviour {
         phaseOptions.Add("P1: MC");
         phaseOptions.Add("P1.5: PreRaid + DM");
         phaseOptions.Add("P1.5: MC + DM");
-        phaseOptions.Add("P2: MC + World Bosses");
+        phaseOptions.Add("P2: MC + World Bosses/Honor");
         phaseOptions.Add("P3: BWL");
+        phaseOptions.Add("P4: ZG");
         phase.ClearOptions();
         phase.AddOptions(phaseOptions);
 
@@ -354,8 +361,10 @@ public class GameController : MonoBehaviour {
             new Item[] { //feet
             },
             new Item[] {
+                new Item("Don Julio's Band", 1.1f, 1f, 1, true),
             },
             new Item[] {
+                new Item("Don Julio's Band", 1.1f, 1f, 1, true),
             },
             new Item[] { //hoj
             },
@@ -419,6 +428,93 @@ public class GameController : MonoBehaviour {
             }
         };
     }
+    void BGInit()
+    {
+        BGGear = new Item[][]{
+            new Item[] { //head
+            },
+            new Item[] { //neck
+            },
+            new Item[] { //shoulder
+            },
+            new Item[] { //back
+            },
+            new Item[] { //chest
+            },
+            new Item[] { //bracers
+            },
+            new Item[] { //hand
+            },
+            new Item[] { //waist
+            },
+            new Item[] { //legs
+            },
+            new Item[] { //feet
+            },
+            new Item[] { //ring
+                new Item("Don Julio's Band", 1.1f, 1, 1, true),
+            },
+            new Item[] {
+            },
+            new Item[] { //hoj
+            },
+            new Item[] {
+            },
+            new Item[] { //Wep
+            },
+            new Item[] {
+            }
+        };
+    }
+    void ZGInit()
+    {
+        ZGGear = new Item[][]{
+            new Item[] { //head
+                new Item("Foror's Eyepatch", 3.1f, 2f),
+                new Item("Bloodstained Coif", 2, 2)
+            },
+            new Item[] { //neck
+                new Item("Eye of Hakkar", 2.9f, 1)
+            },
+            new Item[] { //shoulder
+            },
+            new Item[] { //back
+                new Item("Might of the Tribe", 2, 0),
+            },
+            new Item[] { //chest
+                new Item("Runed Bloodstained Hauberk", 4.1f, 1)
+            },
+            new Item[] { //bracers
+            },
+            new Item[] { //hand
+                new Item("Seafury Gauntlets", 1.4f, 1),
+                new Item("Blooddrenched Grips", 2.4f, 1f)
+            },
+            new Item[] { //waist
+            },
+            new Item[] { //legs
+            },
+            new Item[] { //feet
+            },
+            new Item[] { //ring
+                new Item("Seal of Jin", 1.4f, 1, true),
+                new Item("Seal of the Gurubashi Berserker", 2.9f, 0, true)
+            },
+            new Item[] {
+                new Item("Seal of Jin", 1.4f, 1, true),
+                new Item("Seal of the Gurubashi Berserker", 2.9f, 0, true)
+            },
+            new Item[] { //hoj
+            },
+            new Item[] {
+            },
+            new Item[] {
+                new Item("Zulian Stone Axe", 61.7f, 1, 0, 2.8f, true),
+            },
+            new Item[] {
+            }
+        };
+    }
 
     Item[][] joinItemArray(Item[][] arr1, Item[][] arr2)
     {
@@ -455,11 +551,19 @@ public class GameController : MonoBehaviour {
                             || (itArr[j].dps <= itArr[k].dps && itArr[j].crit <= itArr[k].crit && itArr[j].hit < itArr[k].hit)
                             )
                         {
-                            //it1 is just worse than it2
-                            if (!itArr[j].hasSet)
+                            //both same wep type?
+                            if (
+                                (itArr[j].axe && itArr[k].axe)
+                                ||
+                                (!itArr[j].axe && !itArr[k].axe)
+                              )
                             {
-                                //print(itArr[j].name + " is worse than " + itArr[k].name);
-                                removeList.Add(itArr[j]);
+                                //it1 is just worse than it2
+                                if (!itArr[j].hasSet)
+                                {
+                                    print(itArr[j].name + " is worse than " + itArr[k].name);
+                                    removeList.Add(itArr[j]);
+                                }
                             }
                         }
                     }
@@ -726,6 +830,9 @@ public class GameController : MonoBehaviour {
                 break;
             case 6:
                 currentGearSet = joinItemArray(joinItemArray(joinItemArray(joinItemArray(preRaidGear, DMGear), MCGear), WBGear), BWLGear);
+                break;
+            case 7:
+                currentGearSet = joinItemArray(joinItemArray(joinItemArray(joinItemArray(joinItemArray(preRaidGear, DMGear), MCGear), WBGear), BWLGear), ZGGear);
                 break;
             default:
                 break;
